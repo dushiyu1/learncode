@@ -15,7 +15,7 @@ import base64
 import json
 #头文件配置信息
 host = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=Gz8YooMGDOGdBCgz9GEmQN3Z&client_secret=XHD7noXfQdmeyxYsWUPQbnvVBFOVCLTo'
-#host = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client_id=6epPHS8EPX1k8GjdCzez7OLT&client_secret=onZaVAlgYzEBchooR91xQf8j7kgoFG4W'
+
 response = requests.get(host)
 if response:
     taken = response.json()
@@ -27,15 +27,14 @@ if response:
 '''
 
 request_url = "https://aip.baidubce.com/rest/2.0/ocr/v1/vehicle_license"
-# 二进制方式打开图片文件
-f = open(r'/Users/toshigyoku/Downloads/222.JPG', 'rb')
+f = open(filePath, 'rb')
 img = base64.b64encode(f.read())
 
 params = {"image":img}
 access_token = taken['access_token']
 request_url = request_url + "?access_token=" + access_token
 headers = {'content-type': 'application/x-www-form-urlencoded'}
-# response = requests.post(request_url, data=params, headers=headers)
+
 result = requests.post(request_url, data=params, headers=headers)
 
 if response:
@@ -52,7 +51,7 @@ if response:
     注册日期 = a['words_result']['注册日期']['words']
     车辆识别代号 = a['words_result']['车辆识别代号']['words']
 
-    #print("号牌号码："+号牌号码)
+
 
 class CarCardRecognize(QDialog):
     def __init__(self):
@@ -62,6 +61,7 @@ class CarCardRecognize(QDialog):
         self.carid = ""
         self.filePath = ""
         self.initUI()
+    
 
     def initUI(self):
         self.resize(700,600)
@@ -141,11 +141,14 @@ class CarCardRecognize(QDialog):
         db.close()
         print(QMessageBox.information(self, "提醒", "已成功识别行驶证!信息可能有误，请仔细核对信息！！！", QMessageBox.Yes, QMessageBox.Yes))
         self.tedit.setPlainText(self.text)
-
+    
     def get_file_content(self,filePath):
         with open(filePath, 'rb') as fp:
             return fp.read()
+    
+    
 
+    #print("号牌号码："+号牌号码)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
